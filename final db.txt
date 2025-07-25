@@ -1,0 +1,99 @@
+-- -----------------------------------------------------
+-- Database `finaldb` 생성
+-- -----------------------------------------------------
+CREATE DATABASE IF NOT EXISTS `finaldb`;
+USE `finaldb`;
+
+-- -----------------------------------------------------
+-- Table `finaldb`.`user`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `finaldb`.`user`;
+CREATE TABLE `finaldb`.`user` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(45) NOT NULL,
+  `email` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(100) NOT NULL,
+  `role` VARCHAR(45) NOT NULL,
+  `name` VARCHAR(100) NOT NULL,
+  `create_id_date` DATETIME NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `finaldb`.`study`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `finaldb`.`study`;
+CREATE TABLE `finaldb`.`study` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(100) NOT NULL,
+  `description` TEXT NOT NULL,
+  `status` VARCHAR(45) NOT NULL,
+  `created_user` BIGINT NOT NULL,
+  `start_date` DATETIME NOT NULL,
+  `end_date` DATETIME NOT NULL,
+  `current_members` INT NOT NULL,
+  `max_members` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`created_user`) REFERENCES `user`(`id`)
+) ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `finaldb`.`study_member`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `finaldb`.`study_member`;
+CREATE TABLE `finaldb`.`study_member` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `study_id` BIGINT NOT NULL,
+  `user_id` BIGINT NOT NULL,
+  `role` VARCHAR(45) NOT NULL,
+  `status` VARCHAR(45) NOT NULL,
+  `password` VARCHAR(100),
+  `joined_date` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`study_id`) REFERENCES `study`(`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
+) ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `finaldb`.`attendance_study`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `finaldb`.`attendance_study`;
+CREATE TABLE `finaldb`.`attendance_study` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `finaldb`.`attendance_user`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `finaldb`.`attendance_user`;
+CREATE TABLE `finaldb`.`attendance_user` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `finaldb`.`attendance`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `finaldb`.`attendance`;
+CREATE TABLE `finaldb`.`attendance` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `date` DATE NOT NULL,
+  `attended` BOOLEAN NOT NULL,
+  `user_id` BIGINT NOT NULL,
+  `study_id` BIGINT NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `attendance_user`(`id`),
+  FOREIGN KEY (`study_id`) REFERENCES `attendance_study`(`id`)
+) ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- 기타 설정 복원
+-- -----------------------------------------------------
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+
